@@ -158,7 +158,7 @@ var container50ms = setInterval(function() {
 				objectPositionsToSend.push(rooms[i].objectList[y].getCompressedNetworkObject());
 			}
 		}
-		if (playerPositionsToSend.length) {
+		if (objectPositionsToSend.length) {
 			for (var y = 0;y < playerLength;y++) {
 				rooms[i].playerList[y].socket.emit("mo",objectPositionsToSend);
 			}			

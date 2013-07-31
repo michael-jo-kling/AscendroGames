@@ -261,7 +261,7 @@ function initField(player,room) {
 			if (intersects.length > 0) {
 				SELECTED.position.x = intersects[0].point.x;
 				SELECTED.position.z = intersects[0].point.z;
-				if (socket) {
+				if (socket) {					
 					socket.emit("mo",[SELECTED.externalId,SELECTED.position.x,SELECTED.position.z,SELECTED.position.y]);
 				}
 			}
@@ -294,7 +294,7 @@ function onDocumentMouseDown( event ) {
 			controls.enabled = false;
 			SELECTED = INTERSECTED;
 			SELECTED.position.y = 45;
-			if (socket) {				
+			if (socket) {	                                
 				socket.emit("mo",[SELECTED.externalId,SELECTED.position.x,SELECTED.position.z,SELECTED.position.y]);
 			}
 			container.css( 'cursor','move');
@@ -308,8 +308,8 @@ function onDocumentMouseDown( event ) {
 		controls.enabled = true;
 		if ( INTERSECTED || SELECTED ) {
 			if (SELECTED) {
-				SELECTED.position.y = 25;
-				if (socket) {			
+				SELECTED.position.y = 25;			
+				if (socket) {
 					socket.emit("mo",[SELECTED.externalId,SELECTED.position.x,SELECTED.position.z,SELECTED.position.y]);
 				}
 			}
