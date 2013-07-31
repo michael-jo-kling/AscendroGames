@@ -212,12 +212,14 @@ function initField(player,room) {
 	}
 	
 	function updateMarker(color,x,y) {
-		playerObjects["c"+color].position.x = x;
-		playerObjects["c"+color].position.z = y;
+                if (currentPlayer != "c"+color) {
+			playerObjects["c"+color].position.x = x;
+			playerObjects["c"+color].position.z = y;
+		}
 	}
 	
 	function updateObject(id,x,y,z) {
-		if (objects[id]) {
+		if (objects[id] && objects[id] != SELECTED) {
 			objects[id].position.x = x;
 			objects[id].position.z = y;
 			objects[id].position.y = z;
@@ -247,7 +249,7 @@ function initField(player,room) {
 		projector.unprojectVector( vector, camera );
 		var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 		var intersects = raycaster.intersectObjects( fields );
-		if (intersects.length > 0) {
+		if (intersects.length > 0 && playerObjects[currentPlayer]) {
 			playerObjects[currentPlayer].position.x = intersects[0].point.x;
 			playerObjects[currentPlayer].position.z = intersects[0].point.z;
 			if (socket) {
@@ -292,7 +294,7 @@ function onDocumentMouseDown( event ) {
 			controls.enabled = false;
 			SELECTED = INTERSECTED;
 			SELECTED.position.y = 45;
-			if (socket) {
+			if (socket) {				
 				socket.emit("mo",[SELECTED.externalId,SELECTED.position.x,SELECTED.position.z,SELECTED.position.y]);
 			}
 			container.css( 'cursor','move');
@@ -307,7 +309,7 @@ function onDocumentMouseDown( event ) {
 		if ( INTERSECTED || SELECTED ) {
 			if (SELECTED) {
 				SELECTED.position.y = 25;
-				if (socket) {
+				if (socket) {			
 					socket.emit("mo",[SELECTED.externalId,SELECTED.position.x,SELECTED.position.z,SELECTED.position.y]);
 				}
 			}

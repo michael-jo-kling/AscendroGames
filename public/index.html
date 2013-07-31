@@ -292,7 +292,7 @@ width: 400px;
 				});		
 				
 			$('#playerName').on('keyup',function() {changePlayerName();});
-			$('#chatField').on('keypress',function() {
+			$('#chatField').on('keypress',function(event) {
 				if (event.which == 13) {
 					sendChatMessage($('#chatField').val());
 					$('#chatField').val("");
