@@ -37,14 +37,13 @@ function handler (req, res) {
 
 io.sockets.on('connection', function (socket) {
 	var player = new Player(socket)
-	socket.set('player', player);
+	socket.player = player;
 	socket.emit("you",player.getNetworkObject());
 	socket.emit('roomList', Room.prototype.static_getOverviewList());
 
 	socket.on('setPlayerName', function (name) {
-		socket.get('player', function (err, player) {
-			player.setName(name);
-		});
+		var player = socket.player;	  
+		player.setName(name);
 		socket.emit("you",player.getNetworkObject());
 	});
   
@@ -53,37 +52,34 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('createRoom', function (name) {
-		socket.get('player', function (err, player) {
-			if (!player.name) {
-				socket.emit("error","Please set a name first!");
-				return;
-			}
-			if (!player.room) {
-				var room = new Room(name);			  
-				room.connectPlayer(player);			  
-			}
-		});
+		var player = socket.player;	  
+		if (!player.name) {
+			socket.emit("error","Please set a name first!");
+			return;
+		}
+		if (!player.room) {
+			var room = new Room(name);			  
+			room.connectPlayer(player);			  
+		}
 	});  
 	
 	socket.on('joinRoom', function (id) {
-		socket.get('player', function (err, player) {
-			if (!player.name) {
-				socket.emit("error","Please set a name first!");
-				return;
-			}
-			var room = Room.prototype.static_getRoomWithId(id);
-			if (room) {
-				room.connectPlayer(player);			  
-			} else {
-				socket.emit("error","Room not found.");
-			}
-		});  
+		var player = socket.player;	  
+		if (!player.name) {
+			socket.emit("error","Please set a name first!");
+			return;
+		}
+		var room = Room.prototype.static_getRoomWithId(id);
+		if (room) {
+			room.connectPlayer(player);			  
+		} else {
+			socket.emit("error","Room not found.");
+		}  
 	});
   
   socket.on('getMe', function (data) {
-		socket.get('player', function (err, player) {
-			socket.emit("you",player.getNetworkObject());
-		});    
+		var player = socket.player;	  
+		socket.emit("you",player.getNetworkObject());   
   });   
   
   socket.on('message', function (data) {
@@ -92,38 +88,33 @@ io.sockets.on('connection', function (socket) {
 			throw new Error('server killed by kill message');
 		  }
 	  
-		socket.get('player', function (err, player) {
-			player.sendMessage(data);
-		});	  
+		var player = socket.player;	  
+		player.sendMessage(data);	  
   });  
   
   //Move Player
   socket.on('mp', function (data) {
-		socket.get('player', function (err, player) {
-			player.setPosition(data[0],data[1]);
-		}); 	  
+		var player = socket.player;	  
+		player.setPosition(data[0],data[1]);	  
   });  
   
   //Move Object
   socket.on('mo', function (data) {
-		socket.get('player', function (err, player) {
-			player.moveObject(data[0],data[1],data[2],data[3]);
-		});
+		var player = socket.player;	  
+	  	player.moveObject(data[0],data[1],data[2],data[3]);
   });    
   
   socket.on('rollDice', function (data) {
-		socket.get('player', function (err, player) {
-			if (player.room) {
-				player.room.rollDice();
-			}
-		});    
+		var player = socket.player;	  
+	  	if (player.room) {
+			player.room.rollDice();
+		}    
   });       
   
   socket.on('disconnect', function () {
-	  socket.get('player', function (err, player) {
-		  player.socket = null;
-		  player.disconnect();
-	  });	  
+	  var player = socket.player;	  
+	  player.socket = null;
+	  player.disconnect();
   });
 });
 
