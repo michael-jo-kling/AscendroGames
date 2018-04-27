@@ -7,7 +7,9 @@ var app = require('http').createServer(handler)
 var Player = require('./classes/player.js');
 var Room = require('./classes/room.js');
 
-app.listen(1337);
+var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+	
+app.listen(port);
 
 function handler (req, res) {
   var url = req.url;
