@@ -14,7 +14,7 @@ function handler (req, res) {
   if (url == '/') {
 	  url = '/index.html';
   }
-  var type = mime.lookup(url);
+  var type = mime.getType(url);
 	if (req.url.indexOf('../') >=0) {
 		res.writeHead(500);
 		res.end('Error loading index.html');
